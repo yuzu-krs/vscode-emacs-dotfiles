@@ -1,0 +1,215 @@
+{
+  // ============================================================
+  // Theme / Appearance
+  // ============================================================
+  //
+  // 見た目まわり。
+  // Dracula + Material Icon Theme の構成。
+  // Emacs風というより、普段使いで見やすいVSCode環境に寄せる。
+
+  // ファイルアイコンテーマ。
+  // 拡張機能: PKief.material-icon-theme
+  "workbench.iconTheme": "material-icon-theme",
+
+  // カラーテーマ。
+  // 拡張機能: dracula-theme.theme-dracula
+  "workbench.colorTheme": "Dracula Theme",
+
+  // 色の個別上書き。
+  // 今は空。必要になったらここに追加する。
+  "workbench.colorCustomizations": {},
+
+  // VSCodeウィンドウのボタン類をVSCode側の見た目に寄せる。
+  "window.controlsStyle": "custom",
+
+  // タイトルバーをVSCode独自デザインにする。
+  "window.titleBarStyle": "custom",
+
+  // VSCode起動時に前回のウィンドウを復元しない。
+  // 毎回きれいに開きたい人向け。
+  "window.restoreWindows": "none",
+
+  // ============================================================
+  // Editor
+  // ============================================================
+  //
+  // エディタ本体の設定。
+  // Emacs運用では相対行番号より普通の行番号が扱いやすい。
+  //
+  // Emacs基本操作:
+  // Ctrl+a  行頭
+  // Ctrl+e  行末
+  // Ctrl+k  行末まで削除
+  // Ctrl+y  貼り付け
+  // Ctrl+p  上へ移動
+  // Ctrl+n  下へ移動
+  // Ctrl+f  右へ移動
+  // Ctrl+b  左へ移動
+
+  // 保存時に自動フォーマットする。
+  // Prettierや言語ごとのフォーマッタが実行される。
+  "editor.formatOnSave": true,
+
+  // デフォルトのフォーマッタ。
+  // 拡張機能: esbenp.prettier-vscode
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  // 行番号。
+  // Emacs文化ではVimほど相対行番号を使わないので "on" でOK。
+  "editor.lineNumbers": "on",
+
+  // ミニマップを非表示。
+  // 画面を広く使うため。Emacs寄りのシンプル表示。
+  "editor.minimap.enabled": false,
+
+  // カーソル点滅をなめらかにする。
+  "editor.cursorBlinking": "smooth",
+
+  // ============================================================
+  // Search / Find
+  // ============================================================
+  //
+  // Emacs風の検索操作を邪魔しにくくするための補助設定。
+  // emacs-mcx 拡張だけでは補いきれない VSCode 側の検索挙動を調整する。
+
+  // 選択中の文字列を勝手に検索欄へ入れない。
+  // Emacs風に、自分で入力した検索語を使いたい場合に便利。
+  "editor.find.seedSearchStringFromSelection": "never",
+
+  // 選択範囲がある時だけ自動的に「選択範囲内検索」へ寄りすぎないようにする。
+  // 予期せず検索範囲が狭くなるのを防ぐ。
+  "editor.find.autoFindInSelection": "never",
+
+  // ============================================================
+  // Emacs / Awesome Emacs Keymap
+  // ============================================================
+  //
+  // Emacs基本操作は Awesome Emacs Keymap / emacs-mcx 拡張に任せる。
+  //
+  // 拡張機能:
+  // tuttieee.emacs-mcx
+  //
+  // このsettings.jsonでは、emacs-mcxだけで補いにくい
+  // VSCode側の挙動を少しだけ調整する。
+  //
+  // 重要:
+  // Ctrl+x / Ctrl+c はEmacs文化では重要なprefixなので、
+  // VSCode固有操作のleaderには使わない。
+  //
+  // 今回のキーマップでは VSCode固有操作を Ctrl+q leader に逃がす。
+  // 例:
+  // Ctrl+q f      ファイル検索
+  // Ctrl+q s      全文検索
+  // Ctrl+q e      Explorer
+  // Ctrl+q t      ターミナル
+  // Ctrl+q z      lazygit
+  // Ctrl+q Alt+c  Copilot Chat
+
+  // AltキーがMetaとして使いにくい環境向け。
+  // 例: Alt+w が効きづらい場合、Esc w を Meta+w として使えるようにする。
+  //
+  // Emacs表記:
+  // M-w   コピー
+  // Esc w コピーの代替
+  "emacs-mcx.useMetaPrefixEscape": true,
+
+  // ============================================================
+  // Terminal
+  // ============================================================
+  //
+  // VSCode内ターミナル設定。
+  // Git Bashはreadline系なので、Emacs風キーと相性が良い。
+  //
+  // ターミナル内で使うキー:
+  // Ctrl+a  行頭
+  // Ctrl+e  行末
+  // Ctrl+k  行末まで削除
+  // Ctrl+u  行頭まで削除
+  // Ctrl+w  前の単語を削除
+  // Ctrl+y  貼り付け
+  // Ctrl+p  前の履歴
+  // Ctrl+n  次の履歴
+  // Ctrl+r  履歴検索
+
+  // Windowsで使うデフォルトターミナル。
+  "terminal.integrated.defaultProfile.windows": "Git Bash",
+
+  // ============================================================
+  // Copilot / Chat
+  // ============================================================
+  //
+  // GitHub Copilot / Copilot Chat関連。
+  // コード補完は使うが、Markdownやコミットメッセージでは控えめにする。
+
+  // Copilot Next Edit Suggestionsを有効化。
+  "github.copilot.nextEditSuggestions.enabled": true,
+
+  // Copilotを有効にするファイル種別。
+  // MarkdownやSCM入力欄では暴れやすいので無効化。
+  "github.copilot.enable": {
+    "*": true,
+    "plaintext": true,
+    "markdown": false,
+    "scminput": false
+  },
+
+  // GitLensのAI機能でVSCode側のCopilotモデルを使う。
+  "gitlens.ai.model": "vscode",
+
+  // GitLens AIのモデル指定。
+  "gitlens.ai.vscode.model": "copilot:gpt-4.1",
+
+  // Chatセッションの表示を縦積みにする。
+  "chat.viewSessions.orientation": "stacked",
+
+  // ============================================================
+  // Security / Remote
+  // ============================================================
+  //
+  // WSLやRemote SSHまわり。
+  // 個人PC固有の remote.SSH.remotePlatform などは、
+  // 公開dotfilesには入れない方が安全。
+
+  // WSLのUNCパスを許可。
+  "security.allowedUNCHosts": ["wsl.localhost"],
+
+  // ============================================================
+  // Markdown
+  // ============================================================
+  //
+  // Markdown Preview Enhanced の見た目。
+  // READMEや技術記事を書くとき用。
+
+  // Markdownプレビューのテーマ。
+  "markdown-preview-enhanced.previewTheme": "github-dark.css",
+
+  // Markdownプレビュー内のコードブロックテーマ。
+  "markdown-preview-enhanced.codeBlockTheme": "github-dark.css",
+
+  // ============================================================
+  // Workbench
+  // ============================================================
+  //
+  // VSCode全体の作業領域設定。
+
+  // 右サイドバーは最初は非表示。
+  // Copilot Chatなどを使うときだけ開く。
+  "workbench.secondarySideBar.defaultVisibility": "hidden",
+
+  // ============================================================
+  // Other
+  // ============================================================
+  //
+  // その他の細かい設定。
+
+  // Makefileを開いたときに自動構成する。
+  "makefile.configureOnOpen": true,
+
+  // Explorerでファイル削除時の確認を出さない。
+  // 誤削除が怖い場合は true に戻す。
+  "explorer.confirmDelete": false,
+
+  // code-text-binary用の個別設定枠。
+  // 今は空。
+  "[code-text-binary]": {}
+}

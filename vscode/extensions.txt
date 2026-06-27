@@ -1,0 +1,9 @@
+tuttieee.emacs-mcx
+dracula-theme.theme-dracula
+PKief.material-icon-theme
+esbenp.prettier-vscode
+GitHub.copilot
+GitHub.copilot-chat
+eamodio.gitlens
+shd101wyy.markdown-preview-enhanced
+ms-vscode-remote.remote-ssh

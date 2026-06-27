@@ -1,0 +1,906 @@
+[
+  // ============================================================
+  // Emacs + VSCode keybindings
+  // ============================================================
+  //
+  // このファイルの目的:
+  // VSCodeをEmacsキーバインド中心で使いながら、
+  // VSCode特有の操作だけを Ctrl+q から始まるショートカットにまとめる。
+  //
+  // 例:
+  // Ctrl+q f      ファイル検索
+  // Ctrl+q s      全文検索
+  // Ctrl+q e      Explorerを開く
+  // Ctrl+q t      ターミナルを開く
+  // Ctrl+q z      lazygitを起動
+  // Ctrl+q Alt+c  Copilot Chat / Agentを開く
+  //
+  //
+  // 重要:
+  // 以前は Ctrl+; leader を使っていたが、日本語キーボード環境では
+  // Ctrl+; が VSCode の拡大操作として解釈される場合がある。
+  // そのため、この修正版では leader を Ctrl+q に変更している。
+
+  // ------------------------------------------------------------
+  // 方針
+  // ------------------------------------------------------------
+  //
+  // 1. Emacsの基本操作は Awesome Emacs Keymap に任せる
+  //
+  //   Ctrl+a  行頭へ移動
+  //   Ctrl+e  行末へ移動
+  //   Ctrl+k  カーソル位置から行末まで削除
+  //   Ctrl+y  貼り付け
+  //   Ctrl+p  上へ移動 / ターミナル履歴の前へ
+  //   Ctrl+n  下へ移動 / ターミナル履歴の次へ
+  //   Ctrl+f  右へ移動
+  //   Ctrl+b  左へ移動
+  //   Ctrl+r  検索 / ターミナル履歴検索
+  //
+  // 2. VSCode固有操作は Ctrl+q をleaderキーとして使う
+  //
+  //   Emacsでよく使う Ctrl+a / Ctrl+e / Ctrl+k / Ctrl+y などを
+  //   壊さないため、VSCode専用操作は Ctrl+q に逃がす。
+  //
+  // 3. Space leader は使わない
+  //
+  //   Neovimと違って、Emacs運用では常に文字入力できる状態なので、
+  //   Spaceをleaderにすると普通のスペース入力と衝突しやすい。
+  //
+  // 4. ターミナルはEmacs/readline系の操作を優先する
+  //
+  //   Ctrl+p / Ctrl+n / Ctrl+r がVSCodeに奪われないように、
+  //   terminalFocus のときだけターミナルへ制御文字を送る。
+  //
+  // 5. Git操作はlazygitを使う
+  //
+  //   Ctrl+q z でターミナルを開き、最大化して lazygit を起動する。
+
+  // ============================================================
+  // Command / Quick Access
+  // ============================================================
+  //
+  // VSCode全体の検索・コマンド呼び出し系。
+  // ファイルを探す、コマンドパレットを開く、シンボル検索をする。
+  //
+  // よく使う:
+  // Ctrl+q Ctrl+q   コマンドパレット
+  // Ctrl+q f        ファイル検索
+  // Ctrl+q r        最近開いたもの
+  // Ctrl+q o        現在ファイル内のシンボル検索
+  // Ctrl+q w        ワークスペース全体のシンボル検索
+
+  // コマンドパレットを開く
+  // VSCodeの全コマンドを検索して実行できる。
+  // 標準の Ctrl+Shift+P と同じ用途。
+  {
+    "key": "ctrl+q ctrl+q",
+    "command": "workbench.action.showCommands",
+    "when": "editorTextFocus || !inputFocus"
+  },
+
+  // ファイル検索 / Quick Open
+  // プロジェクト内のファイル名を入力してすぐ開く。
+  // 標準の Ctrl+P と近い操作。
+  {
+    "key": "ctrl+q f",
+    "command": "workbench.action.quickOpen",
+    "when": "editorTextFocus || !inputFocus"
+  },
+
+  // 最近開いたファイル・フォルダを開く
+  // 直近で開いたワークスペースやファイルへ移動する。
+  {
+    "key": "ctrl+q r",
+    "command": "workbench.action.openRecent",
+    "when": "editorTextFocus || !inputFocus"
+  },
+
+  // 現在のファイル内のシンボル検索
+  // 関数名・クラス名・見出しなどへジャンプする。
+  {
+    "key": "ctrl+q o",
+    "command": "workbench.action.gotoSymbol",
+    "when": "editorTextFocus"
+  },
+
+  // ワークスペース全体のシンボル検索
+  // プロジェクト全体から関数・クラス・シンボルを探す。
+  {
+    "key": "ctrl+q w",
+    "command": "workbench.action.showAllSymbols",
+    "when": "editorTextFocus || !inputFocus"
+  },
+
+  // ============================================================
+  // Search
+  // ============================================================
+  //
+  // 検索系。
+  // 現在ファイル内検索はEmacs拡張やVSCode標準に任せ、
+  // ここでは主にプロジェクト全体検索を割り当てる。
+  //
+  // よく使う:
+  // Ctrl+q s        全文検索
+  // Ctrl+q Shift+s  検索ビューを開く
+
+  // 全文検索
+  // プロジェクト全体から文字列を検索する。
+  // 標準の Ctrl+Shift+F と近い操作。
+  {
+    "key": "ctrl+q s",
+    "command": "workbench.action.findInFiles",
+    "when": "editorTextFocus || !inputFocus"
+  },
+
+  // 検索ビューを開く
+  // 左サイドバーの検索ビューへ移動する。
+  {
+    "key": "ctrl+q shift+s",
+    "command": "workbench.view.search",
+    "when": "editorTextFocus || !inputFocus"
+  },
+
+  // ============================================================
+  // Explorer / Sidebar
+  // ============================================================
+  //
+  // 左側のファイル一覧・サイドバー操作。
+  // マウスでExplorerを開かず、キーボードだけでファイルツリーへ移動する。
+  //
+  // よく使う:
+  // Ctrl+q e        Explorerを開く / 閉じる
+  // Ctrl+q b        サイドバー表示切り替え
+  // Ctrl+q Shift+e  今開いているファイルをExplorerで表示
+  // Ctrl+q y        今のファイルのフルパスをコピー
+  // Ctrl+q Shift+y  今のファイルの相対パスをコピー
+
+  // Explorerを開く
+  // 左サイドバーのファイル一覧にフォーカスする。
+  // すでにExplorerが開いていない場合はこちらが動く。
+  {
+    "key": "ctrl+q e",
+    "command": "workbench.files.action.focusFilesExplorer",
+    "when": "editorTextFocus || !inputFocus"
+  },
+
+  // Explorerが開いている場合は閉じる
+  // 同じ Ctrl+q e で開閉できるようにしている。
+  {
+    "key": "ctrl+q e",
+    "command": "workbench.action.closeSidebar",
+    "when": "explorerViewletVisible && (editorTextFocus || !inputFocus)"
+  },
+
+  // サイドバー全体の表示/非表示を切り替える
+  // Explorer以外のサイドバーも含めて開閉したいときに使う。
+  {
+    "key": "ctrl+q b",
+    "command": "workbench.action.toggleSidebarVisibility",
+    "when": "editorTextFocus || sideBarFocus || !inputFocus"
+  },
+
+  // 今開いているファイルをExplorer上で表示する
+  // ファイルの場所をツリー上で確認したいときに便利。
+  {
+    "key": "ctrl+q shift+e",
+    "command": "workbench.files.action.showActiveFileInExplorer",
+    "when": "editorTextFocus || !inputFocus"
+  },
+
+  // OSのエクスプローラーで表示
+  // Windowsのエクスプローラーで現在ファイルの場所を開く。
+  {
+    "key": "ctrl+q alt+e",
+    "command": "revealFileInOS",
+    "when": "editorTextFocus"
+  },
+
+  // 今のファイルのフルパスをコピー
+  // 例: C:\Users\...\project\src\main.ts
+  {
+    "key": "ctrl+q y",
+    "command": "copyFilePath",
+    "when": "editorTextFocus"
+  },
+
+  // 今のファイルの相対パスをコピー
+  // 例: src/main.ts
+  // GitHubやIssueに貼るときはこっちが便利。
+  {
+    "key": "ctrl+q shift+y",
+    "command": "copyRelativeFilePath",
+    "when": "editorTextFocus"
+  },
+
+  // ============================================================
+  // Window / Tabs / Editor Groups
+  // ============================================================
+  //
+  // タブ・分割エディタ・フォーカス移動。
+  // マウスでタブをクリックせず、キーボードだけで移動するための設定。
+  //
+  // よく使う:
+  // Ctrl+q a        エディタへ戻る
+  // Ctrl+q ]        次のタブ
+  // Ctrl+q [        前のタブ
+  // Ctrl+q q        今のタブを閉じる
+  // Ctrl+q u        閉じたタブを復元
+  // Ctrl+q 3        右に分割
+  // Ctrl+q 2        下に分割
+  // Ctrl+q h/j/k/l  ペイン移動
+  // Ctrl+q ,        前の場所へ戻る
+  // Ctrl+q .        次の場所へ進む
+
+  // エディタに戻る
+  // ターミナル、サイドバー、Copilotサイドバー、Problemsなどからエディタへ戻る。
+  {
+    "key": "ctrl+q a",
+    "command": "workbench.action.focusActiveEditorGroup",
+    "when": "terminalFocus || sideBarFocus || auxiliaryBarFocus || panelFocus || !inputFocus"
+  },
+
+  // 次のタブへ移動
+  {
+    "key": "ctrl+q ]",
+    "command": "workbench.action.nextEditor",
+    "when": "editorTextFocus || !inputFocus"
+  },
+
+  // 前のタブへ移動
+  {
+    "key": "ctrl+q [",
+    "command": "workbench.action.previousEditor",
+    "when": "editorTextFocus || !inputFocus"
+  },
+
+  // 今のタブを閉じる
+  // Emacs本体の閉じる操作とは別に、VSCodeタブ操作として用意。
+  {
+    "key": "ctrl+q q",
+    "command": "workbench.action.closeActiveEditor",
+    "when": "editorTextFocus || !inputFocus"
+  },
+
+  // 閉じたタブを復元
+  // 間違えて閉じたファイルを戻す。
+  {
+    "key": "ctrl+q u",
+    "command": "workbench.action.reopenClosedEditor",
+    "when": "editorTextFocus || !inputFocus"
+  },
+
+  // 他のタブをすべて閉じる
+  // 今見ているファイルだけ残したいときに使う。
+  {
+    "key": "ctrl+q shift+q",
+    "command": "workbench.action.closeOtherEditors",
+    "when": "editorTextFocus || !inputFocus"
+  },
+
+  // エディタを右に分割
+  // 標準の分割表示。横に2枚並べたいときに使う。
+  {
+    "key": "ctrl+q 3",
+    "command": "workbench.action.splitEditorRight",
+    "when": "editorTextFocus || !inputFocus"
+  },
+
+  // エディタを下に分割
+  // 縦方向に2枚並べたいときに使う。
+  {
+    "key": "ctrl+q 2",
+    "command": "workbench.action.splitEditorDown",
+    "when": "editorTextFocus || !inputFocus"
+  },
+
+  // 左のエディタグループ・サイドバーへ移動
+  {
+    "key": "ctrl+q h",
+    "command": "workbench.action.navigateLeft",
+    "when": "editorTextFocus || sideBarFocus || auxiliaryBarFocus || panelFocus || !inputFocus"
+  },
+
+  // 右のエディタグループ・サイドバーへ移動
+  {
+    "key": "ctrl+q l",
+    "command": "workbench.action.navigateRight",
+    "when": "editorTextFocus || sideBarFocus || auxiliaryBarFocus || panelFocus || !inputFocus"
+  },
+
+  // 下のパネル・エディタグループへ移動
+  {
+    "key": "ctrl+q j",
+    "command": "workbench.action.navigateDown",
+    "when": "editorTextFocus || sideBarFocus || auxiliaryBarFocus || panelFocus || !inputFocus"
+  },
+
+  // 上のエディタグループへ移動
+  {
+    "key": "ctrl+q k",
+    "command": "workbench.action.navigateUp",
+    "when": "editorTextFocus || sideBarFocus || auxiliaryBarFocus || panelFocus || !inputFocus"
+  },
+
+  // 前の場所へ戻る
+  // 定義ジャンプしたあと元の場所に戻るときに便利。
+  {
+    "key": "ctrl+q ,",
+    "command": "workbench.action.navigateBack",
+    "when": "editorTextFocus || !inputFocus"
+  },
+
+  // 次の場所へ進む
+  // 戻りすぎたときに進む。
+  {
+    "key": "ctrl+q .",
+    "command": "workbench.action.navigateForward",
+    "when": "editorTextFocus || !inputFocus"
+  },
+
+  // ============================================================
+  // Editor / LSP / Code Actions
+  // ============================================================
+  //
+  // 言語サーバー・コードアクション系。
+  // 定義ジャンプ、参照検索、リネーム、Quick Fix、フォーマットなど。
+  //
+  // よく使う:
+  // Ctrl+q d        定義へ移動
+  // Ctrl+q Shift+d  型定義へ移動
+  // Ctrl+q i        実装へ移動
+  // Ctrl+q Shift+r  参照検索
+  // Ctrl+q ?        ホバー表示
+  // Ctrl+q n        リネーム
+  // Ctrl+q x        Quick Fix
+  // Ctrl+q =        フォーマット
+
+  // 定義へ移動
+  // 関数・変数・クラスの定義元へジャンプする。
+  {
+    "key": "ctrl+q d",
+    "command": "editor.action.revealDefinition",
+    "when": "editorTextFocus"
+  },
+
+  // 型定義へ移動
+  // TypeScriptやC#などで型の定義へ飛ぶ。
+  {
+    "key": "ctrl+q shift+d",
+    "command": "editor.action.goToTypeDefinition",
+    "when": "editorTextFocus"
+  },
+
+  // 実装へ移動
+  // interfaceや抽象メソッドの実装先へ飛ぶ。
+  {
+    "key": "ctrl+q i",
+    "command": "editor.action.goToImplementation",
+    "when": "editorTextFocus"
+  },
+
+  // 参照検索
+  // その関数・変数が使われている場所を一覧表示する。
+  {
+    "key": "ctrl+q shift+r",
+    "command": "editor.action.referenceSearch.trigger",
+    "when": "editorTextFocus"
+  },
+
+  // ホバー表示
+  // 型情報やドキュメントコメントを表示する。
+  {
+    "key": "ctrl+q ?",
+    "command": "editor.action.showHover",
+    "when": "editorTextFocus"
+  },
+
+  // リネーム
+  // シンボル名を安全に一括変更する。
+  {
+    "key": "ctrl+q n",
+    "command": "editor.action.rename",
+    "when": "editorTextFocus"
+  },
+
+  // Quick Fix
+  // import追加、型エラー修正、推奨修正などを開く。
+  {
+    "key": "ctrl+q x",
+    "command": "editor.action.quickFix",
+    "when": "editorTextFocus"
+  },
+
+  // Source Action
+  // import整理など、ファイル全体に関わるアクションを開く。
+  {
+    "key": "ctrl+q shift+x",
+    "command": "editor.action.sourceAction",
+    "when": "editorTextFocus"
+  },
+
+  // ドキュメント全体をフォーマット
+  // Prettierや言語フォーマッタを実行する。
+  {
+    "key": "ctrl+q =",
+    "command": "editor.action.formatDocument",
+    "when": "editorTextFocus && !editorReadonly"
+  },
+
+  // 次のエラー/警告へ移動
+  {
+    "key": "ctrl+q down",
+    "command": "editor.action.marker.next",
+    "when": "editorTextFocus"
+  },
+
+  // 前のエラー/警告へ移動
+  {
+    "key": "ctrl+q up",
+    "command": "editor.action.marker.prev",
+    "when": "editorTextFocus"
+  },
+
+  // Problemsビューを開く
+  // エラー・警告一覧を見る。
+  {
+    "key": "ctrl+q p",
+    "command": "workbench.action.problems.focus",
+    "when": "editorTextFocus || !inputFocus"
+  },
+
+  // Outputビューを開く
+  // 拡張機能やビルド出力のログを見る。
+  {
+    "key": "ctrl+q shift+o",
+    "command": "workbench.action.output.toggleOutput",
+    "when": "editorTextFocus || !inputFocus"
+  },
+
+  // ============================================================
+  // Terminal
+  // ============================================================
+  //
+  // VSCode下部のターミナル操作。
+  // Git Bash、lazygit、npm、dotnet、ssh などをキーボードだけで扱う。
+  //
+  // よく使う:
+  // Ctrl+q t        ターミナルを開く / 閉じる
+  // Ctrl+q Shift+t  ターミナルへフォーカス
+  // Ctrl+q Alt+t    新しいターミナル
+  // Ctrl+q Alt+k    今のターミナルを削除
+  // Ctrl+q Alt+s    ターミナル分割
+  // Ctrl+q m        ターミナル最大化 / 元に戻す
+  //
+  // ターミナル内:
+  // Ctrl+p          前のコマンド履歴
+  // Ctrl+n          次のコマンド履歴
+  // Ctrl+r          履歴検索
+
+  // ターミナルを開く / 閉じる
+  {
+    "key": "ctrl+q t",
+    "command": "workbench.action.terminal.toggleTerminal",
+    "when": "editorTextFocus || terminalFocus || !inputFocus"
+  },
+
+  // ターミナルへフォーカス
+  // すでに開いているターミナルへカーソルを移す。
+  {
+    "key": "ctrl+q shift+t",
+    "command": "workbench.action.terminal.focus",
+    "when": "editorTextFocus || !inputFocus"
+  },
+
+  // 新しいターミナルを作成
+  {
+    "key": "ctrl+q alt+t",
+    "command": "workbench.action.terminal.new",
+    "when": "editorTextFocus || terminalFocus || !inputFocus"
+  },
+
+  // 今のターミナルを削除
+  {
+    "key": "ctrl+q alt+k",
+    "command": "workbench.action.terminal.kill",
+    "when": "editorTextFocus || terminalFocus || !inputFocus"
+  },
+
+  // ターミナルを分割
+  {
+    "key": "ctrl+q alt+s",
+    "command": "workbench.action.terminal.split",
+    "when": "editorTextFocus || terminalFocus || !inputFocus"
+  },
+
+  // ターミナル最大化 / 元に戻す
+  {
+    "key": "ctrl+q m",
+    "command": "workbench.action.toggleMaximizedPanel",
+    "when": "editorTextFocus || terminalFocus || !inputFocus"
+  },
+
+  // ターミナルをクリア
+  // clearコマンド相当ではなく、VSCodeターミナル表示をクリアする。
+  {
+    "key": "ctrl+q c",
+    "command": "workbench.action.terminal.clear",
+    "when": "terminalFocus"
+  },
+
+  // ターミナル名を変更
+  {
+    "key": "ctrl+q alt+shift+t",
+    "command": "workbench.action.terminal.rename",
+    "when": "terminalFocus"
+  },
+
+  // ターミナルで前の履歴へ
+  // VSCodeのCtrl+pに奪われず、bash/readlineへ Ctrl+p を送る。
+  {
+    "key": "ctrl+p",
+    "command": "workbench.action.terminal.sendSequence",
+    "when": "terminalFocus",
+    "args": { "text": "\u0010" }
+  },
+
+  // ターミナルで次の履歴へ
+  // bash/readlineへ Ctrl+n を送る。
+  {
+    "key": "ctrl+n",
+    "command": "workbench.action.terminal.sendSequence",
+    "when": "terminalFocus",
+    "args": { "text": "\u000e" }
+  },
+
+  // ターミナル履歴検索
+  // bash/readlineへ Ctrl+r を送る。
+  {
+    "key": "ctrl+r",
+    "command": "workbench.action.terminal.sendSequence",
+    "when": "terminalFocus",
+    "args": { "text": "\u0012" }
+  },
+
+  // ============================================================
+  // Git / lazygit
+  // ============================================================
+  //
+  // Git操作用。
+  // VSCodeのSource Controlも開けるが、基本はlazygit運用。
+  //
+  // よく使う:
+  // Ctrl+q g        VSCode Source Controlを開く
+  // Ctrl+q z        lazygitを起動
+  // Ctrl+q Shift+z  lazygitを終了してターミナルも閉じる
+
+  // VSCode Source Controlビューを開く
+  {
+    "key": "ctrl+q g",
+    "command": "workbench.view.scm",
+    "when": "editorTextFocus || !inputFocus"
+  },
+
+  // lazygitを起動
+  // サイドバーを閉じる → 新しいターミナル → フォーカス → 最大化 → lazygit実行。
+  {
+    "key": "ctrl+q z",
+    "command": "runCommands",
+    "when": "editorTextFocus || !inputFocus",
+    "args": {
+      "commands": [
+        { "command": "workbench.action.closeSidebar" },
+        { "command": "workbench.action.terminal.new" },
+        { "command": "workbench.action.terminal.focus" },
+        { "command": "workbench.action.toggleMaximizedPanel" },
+        {
+          "command": "workbench.action.terminal.sendSequence",
+          "args": { "text": "lazygit\n" }
+        }
+      ]
+    }
+  },
+
+  // lazygit終了用
+  // qを送ってから、現在のターミナルを閉じる。
+  // lazygit以外のターミナルで押すとターミナルも閉じるので注意。
+  {
+    "key": "ctrl+q shift+z",
+    "command": "runCommands",
+    "when": "terminalFocus",
+    "args": {
+      "commands": [
+        {
+          "command": "workbench.action.terminal.sendSequence",
+          "args": { "text": "q" }
+        },
+        { "command": "workbench.action.terminal.kill" }
+      ]
+    }
+  },
+
+  // ============================================================
+  // GitHub Copilot / Chat
+  // ============================================================
+  //
+  // Copilotをキーボードだけで操作するための設定。
+  // Chat、Inline Chat、補完候補の表示・採用・切り替えを行う。
+  //
+  // よく使う:
+  // Ctrl+q Alt+c    Copilot Chat / Agentを開く
+  // Ctrl+q Shift+c  右サイドバーを開閉
+  // Ctrl+q Alt+a    Chatにコンテキストを添付
+  // Ctrl+q Alt+i    Inline Chatを開始
+  // Ctrl+q Alt+q    Quick Chat
+  // Alt+\           インライン補完を手動表示
+  // Tab             Copilot候補を採用
+  // Alt+]           次の候補
+  // Alt+[           前の候補
+
+  // Copilot Chat / Agentを開く
+  {
+    "key": "ctrl+q alt+c",
+    "command": "workbench.action.chat.openagent",
+    "when": "editorTextFocus || !inputFocus"
+  },
+
+  // 右サイドバーを開閉
+  // Copilot Chatなどが表示される補助サイドバー。
+  {
+    "key": "ctrl+q shift+c",
+    "command": "workbench.action.toggleAuxiliaryBar",
+    "when": "editorTextFocus || auxiliaryBarFocus || !inputFocus"
+  },
+
+  // Chatに現在のコンテキストを添付
+  // 今のファイル・選択範囲などをCopilot Chatに渡したいときに使う。
+  {
+    "key": "ctrl+q alt+a",
+    "command": "workbench.action.chat.attachContext",
+    "when": "editorTextFocus || auxiliaryBarFocus || !inputFocus"
+  },
+
+  // Inline Chatを開始
+  // エディタ上で直接Copilotに修正・生成を頼む。
+  {
+    "key": "ctrl+q alt+i",
+    "command": "inlineChat.start",
+    "when": "editorTextFocus"
+  },
+
+  // Quick Chatを開く
+  // 小さめのCopilot Chatを素早く開く。
+  {
+    "key": "ctrl+q alt+q",
+    "command": "workbench.action.quickchat.toggle",
+    "when": "editorTextFocus || !inputFocus"
+  },
+
+  // Copilot追加候補を開く
+  {
+    "key": "ctrl+q alt+g",
+    "command": "github.copilot.generate",
+    "when": "editorTextFocus || !inputFocus"
+  },
+
+  // CopilotをON/OFF
+  {
+    "key": "ctrl+q alt+x",
+    "command": "github.copilot.toggleCopilot",
+    "when": "editorTextFocus || !inputFocus"
+  },
+
+  // インライン補完を手動表示
+  {
+    "key": "alt+\\",
+    "command": "editor.action.inlineSuggest.trigger",
+    "when": "editorTextFocus && !editorReadonly"
+  },
+
+  // Copilot候補を採用
+  {
+    "key": "tab",
+    "command": "editor.action.inlineSuggest.commit",
+    "when": "inlineSuggestionVisible && !editorReadonly"
+  },
+
+  // Copilot候補を閉じる
+  {
+    "key": "escape",
+    "command": "editor.action.inlineSuggest.hide",
+    "when": "inlineSuggestionVisible && editorTextFocus"
+  },
+
+  // 次のCopilot候補
+  {
+    "key": "alt+]",
+    "command": "editor.action.inlineSuggest.showNext",
+    "when": "inlineSuggestionVisible && editorTextFocus"
+  },
+
+  // 前のCopilot候補
+  {
+    "key": "alt+[",
+    "command": "editor.action.inlineSuggest.showPrevious",
+    "when": "inlineSuggestionVisible && editorTextFocus"
+  },
+
+  // Copilot追加候補パネル
+  {
+    "key": "ctrl+enter",
+    "command": "github.copilot.generate",
+    "when": "editorTextFocus && !editorReadonly"
+  },
+
+  // ============================================================
+  // Debug
+  // ============================================================
+  //
+  // デバッグ操作。
+  // F5などの標準キーを使ってもよいが、Ctrl+q 系にもまとめておく。
+  //
+  // よく使う:
+  // Ctrl+q Alt+d          Debug開始
+  // Ctrl+q Alt+Shift+d    Debug停止
+  // Ctrl+q Alt+.          Continue
+  // Ctrl+q Alt+o          Step Over
+  // Ctrl+q Alt+Shift+i    Step Into
+  // Ctrl+q Alt+u          Step Out
+  // Ctrl+q Alt+b          Breakpoint切り替え
+
+  // Debug開始
+  {
+    "key": "ctrl+q alt+d",
+    "command": "workbench.action.debug.start",
+    "when": "editorTextFocus || !inputFocus"
+  },
+
+  // Debug停止
+  {
+    "key": "ctrl+q alt+shift+d",
+    "command": "workbench.action.debug.stop",
+    "when": "editorTextFocus || !inputFocus"
+  },
+
+  // Continue
+  {
+    "key": "ctrl+q alt+.",
+    "command": "workbench.action.debug.continue",
+    "when": "editorTextFocus || !inputFocus"
+  },
+
+  // Step Over
+  {
+    "key": "ctrl+q alt+o",
+    "command": "workbench.action.debug.stepOver",
+    "when": "debugState == 'stopped'"
+  },
+
+  // Step Into
+  {
+    "key": "ctrl+q alt+shift+i",
+    "command": "workbench.action.debug.stepInto",
+    "when": "debugState == 'stopped'"
+  },
+
+  // Step Out
+  {
+    "key": "ctrl+q alt+u",
+    "command": "workbench.action.debug.stepOut",
+    "when": "debugState == 'stopped'"
+  },
+
+  // Breakpoint切り替え
+  {
+    "key": "ctrl+q alt+b",
+    "command": "editor.debug.action.toggleBreakpoint",
+    "when": "editorTextFocus"
+  },
+
+  // Debugビューを開く
+  {
+    "key": "ctrl+q alt+shift+v",
+    "command": "workbench.view.debug",
+    "when": "editorTextFocus || !inputFocus"
+  },
+
+  // ============================================================
+  // Tasks / Build
+  // ============================================================
+  //
+  // VSCode Tasks操作。
+  // tasks.json に登録したビルド・テスト・実行タスクをキーボードから呼び出す。
+  //
+  // よく使う:
+  // Ctrl+q Alt+p          タスク実行
+  // Ctrl+q Alt+Shift+b    ビルドタスク
+  // Ctrl+q Alt+Shift+p    実行中タスク終了
+
+  // タスク実行
+  {
+    "key": "ctrl+q alt+p",
+    "command": "workbench.action.tasks.runTask",
+    "when": "editorTextFocus || !inputFocus"
+  },
+
+  // ビルドタスク実行
+  {
+    "key": "ctrl+q alt+shift+b",
+    "command": "workbench.action.tasks.build",
+    "when": "editorTextFocus || !inputFocus"
+  },
+
+  // 実行中タスク終了
+  {
+    "key": "ctrl+q alt+shift+p",
+    "command": "workbench.action.tasks.terminate",
+    "when": "editorTextFocus || !inputFocus"
+  },
+
+  // ============================================================
+  // Markdown
+  // ============================================================
+  //
+  // Markdownプレビュー操作。
+  // READMEや記事を書くときに、プレビューをキーボードだけで開く。
+  //
+  // よく使う:
+  // Ctrl+q Alt+m    Markdownプレビューを横に開く
+  // Ctrl+q Shift+m  Markdownプレビューを開く
+
+  // Markdownプレビューを横に開く
+  {
+    "key": "ctrl+q alt+m",
+    "command": "markdown.showPreviewToSide",
+    "when": "editorTextFocus"
+  },
+
+  // Markdownプレビューを開く
+  {
+    "key": "ctrl+q shift+m",
+    "command": "markdown.showPreview",
+    "when": "editorTextFocus"
+  },
+
+  // ============================================================
+  // Misc
+  // ============================================================
+  //
+  // その他のVSCode操作。
+  // 拡張機能ビュー、通知、Reload Windowなど。
+  //
+  // よく使う:
+  // Ctrl+q v        拡張機能ビュー
+  // Ctrl+q Shift+n  通知一覧
+  // Ctrl+q Alt+n    通知をすべて消す
+  // Ctrl+q Alt+r    VSCodeをリロード
+
+  // 拡張機能ビューを開く
+  {
+    "key": "ctrl+q v",
+    "command": "workbench.view.extensions",
+    "when": "editorTextFocus || !inputFocus"
+  },
+
+  // 通知一覧を開く
+  {
+    "key": "ctrl+q shift+n",
+    "command": "notifications.showList",
+    "when": "editorTextFocus || !inputFocus"
+  },
+
+  // 通知をすべて消す
+  {
+    "key": "ctrl+q alt+n",
+    "command": "notifications.clearAll",
+    "when": "editorTextFocus || !inputFocus"
+  },
+
+  // VSCodeをリロード
+  // 設定変更や拡張機能の反映で使う。
+  {
+    "key": "ctrl+q alt+r",
+    "command": "workbench.action.reloadWindow",
+    "when": "editorTextFocus || !inputFocus"
+  }
+]
