@@ -725,13 +725,6 @@
     "when": "inlineSuggestionVisible && editorTextFocus"
   },
 
-  // Copilot追加候補パネル
-  {
-    "key": "ctrl+enter",
-    "command": "github.copilot.generate",
-    "when": "editorTextFocus && !editorReadonly"
-  },
-
   // ============================================================
   // Debug
   // ============================================================
