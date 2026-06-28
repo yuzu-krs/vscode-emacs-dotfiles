@@ -1,6 +1,5 @@
-
+#include <stdio.h>
 #include <string.h>
-
 #define MAX_USERS 5
 
 typedef struct {
@@ -37,7 +36,7 @@ double average_score(User users[], int count) {
     return (double)total_score(users, count) / count;
 }
 
-User find_top_user(User users[], int count) {
+User find_test_user(User users[], int count) {
     User best_user = users[0];
 
     for (int i = 1; i < count; i++) {
@@ -45,8 +44,7 @@ User find_top_user(User users[], int count) {
             best_user = users[i];
         }
     }
-ojwaoiwfejijiawfjsi
-jofejaijfijifejijfi
+    return best_user;
 }
 
 void print_report(User users[], int count) {
@@ -62,8 +60,8 @@ void print_report(User users[], int count) {
     printf("Total Score: %d\n", total_score(users, count));
     printf("Average Score: %.2f\n", average_score(users, count));
 
-    User top_user = find_top_user(users, count);
-    printf("Top User: %s\n", top_user.name);
+    User test_user = find_test_user(users, count);
+    printf("Top User: %s\n", test_user.name);
 }
 
 int main(void) {
