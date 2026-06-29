@@ -32,7 +32,6 @@ double average_score(User users[], int count) {
     if (count == 0) {
         return 0.0;
     }
-
     return (double)total_score(users, count) / count;
 }
 
